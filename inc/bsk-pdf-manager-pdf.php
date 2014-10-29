@@ -21,7 +21,6 @@ class BSKPDFManagerPDF {
 		$this->_pdfs_db_tbl_name = $args['pdfs_db_tbl_name'];
 		$this->_pdfs_upload_path = $args['pdf_upload_path'];
 	    $this->_pdfs_upload_folder = $args['pdf_upload_folder'];
-		$this->_bsk_pdf_manager_managment_obj = $args['management_obj'];
 		$this->_plugin_pages_name = $args['pages_name_A'];
 		$this->_open_target_option_name = $args['open_target_option_name'];
 		
@@ -114,7 +113,11 @@ class BSKPDFManagerPDF {
 				$pdf_obj_array = (array)$pdfs_obj_array[0];
 			}
 		}
-		$category_id = $_REQUEST['cat'];
+		if (isset($_REQUEST['cat']) ){
+			$category_id = $_REQUEST['cat'];
+		} else {
+			$category_id = 0;
+		}
 		if ( isset($pdf_obj_array['cat_id']) ){
 			$category_id = $pdf_obj_array['cat_id'];
 		}
@@ -144,7 +147,7 @@ class BSKPDFManagerPDF {
 			}
 			
 			
-			if( $pdf_obj_array['file_name'] && file_exists($this->_pdfs_upload_path.$pdf_obj_array['file_name']) ){
+			if( isset($pdf_obj_array['file_name']) && file_exists($this->_pdfs_upload_path.$pdf_obj_array['file_name']) ){
 				$file_url = get_option('home').'/'.$this->_pdfs_upload_folder.$pdf_obj_array['file_name'];
 			}else{
 				$file_str = '';
@@ -155,15 +158,18 @@ class BSKPDFManagerPDF {
             <table style="width:80%;">
                 <tr>
                     <td style="width:150px;">Title:</td>
-                    <td><input type="text" name="bsk_pdf_manager_pdf_titile" id="bsk_pdf_manager_pdf_titile_id" value="<?php echo $pdf_obj_array['title']; ?>" maxlength="512" /></td>
+                    <td><input type="text" name="bsk_pdf_manager_pdf_titile" id="bsk_pdf_manager_pdf_titile_id" value="<?php 
+		if (isset($pdf_obj_array['title']) ) echo $pdf_obj_array['title']; ?>" maxlength="512" /></td>
                 </tr>
                 </li>
                 <?php if ($pdf_id > 0 && $file_url){ ?>
                 <tr>
                     <td>Old File:</td>
                     <td>
-                    <a href="<?php echo $file_url; ?>" target="_blank"><?php echo $pdf_obj_array['file_name']; ?></a>
-                    <input type="hidden" name="bsk_pdf_manager_pdf_file_old" id="bsk_pdf_manager_pdf_file_old_id" value="<?php echo $pdf_obj_array['file_name']; ?>" />
+                    <a href="<?php 
+			if (isset( $pdf_obj_array['file_name']) )echo $file_url; ?>" target="_blank"><?php echo $pdf_obj_array['file_name']; ?></a>
+                    <input type="hidden" name="bsk_pdf_manager_pdf_file_old" id="bsk_pdf_manager_pdf_file_old_id" value="<?php 
+			if (isset( $pdf_obj_array['file_name']) ) echo $pdf_obj_array['file_name']; ?>" />
                     </td>
                 </tr>
                 <?php } ?>

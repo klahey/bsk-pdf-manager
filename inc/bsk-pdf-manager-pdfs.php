@@ -92,11 +92,15 @@ class BSKPDFManagerPDFs extends WP_List_Table {
 		$select_str_footer = '	</select>
 							  </div>';
 		
-		if (!$categoreies || count($categoreies) < 1){
+		if (!$categoreies || (count($categoreies) < 1) ){
 			$select_str_body = '<option value="0">Please add category first</option>';
 		}else{
-			$current_category_id = $_REQUEST['cat'];
-			if ($current_category_id < 1){
+			if (isset($_REQUEST['cat']) ) {
+				$current_category_id =   $_REQUEST['cat'];
+			} else { 
+				$current_category_id =  0;
+			}
+			if ( $current_category_id < 0){
 				$current_category_id = $_REQUEST['bsk_pdf_manager_pdf_edit_categories'];
 			}
 			$select_str_body = '<option value="0">Please select category</option>';
@@ -173,6 +177,7 @@ class BSKPDFManagerPDFs extends WP_List_Table {
 			$whereCase = ' WHERE l.cat_id = '.$current_category_id;
 		}
 		$orderCase = ' ORDER BY l.last_date DESC';
+		if (isset($orderby)) {
 		if( $orderby == 'cat_title' ){
 			$orderCase = ' ORDER BY c.cat_title '.$order.', l.last_date DESC';
 		}else if( $orderby == 'title' ){
@@ -180,7 +185,7 @@ class BSKPDFManagerPDFs extends WP_List_Table {
 		}else if( $orderby == 'last_date' ){
 			$orderCase = ' ORDER BY l.last_date '.$order;
 		}
-
+		}
 		$all_pdfs = $wpdb->get_results($sql.$whereCase.$orderCase);
 		if (!$all_pdfs || count($all_pdfs) < 1){
 			return NULL;
@@ -262,8 +267,8 @@ class BSKPDFManagerPDFs extends WP_List_Table {
 		
 		$hidden = array();
 
-		$_sortable = apply_filters( "manage_{$screen->id}_sortable_columns", $this->get_sortable_columns() );
-
+		//$_sortable = apply_filters( "manage_{$screen->id}_sortable_columns", $this->get_sortable_columns() );
+		$_sortable = $this->get_sortable_columns();
 		$sortable = array();
 		foreach ( $_sortable as $id => $data ) {
 			if ( empty( $data ) )
