@@ -178,14 +178,14 @@ class BSKPDFManagerPDFs extends WP_List_Table {
 		}
 		$orderCase = ' ORDER BY l.last_date DESC';
 		if (isset($orderby)) {
-		if( $orderby == 'cat_title' ){
-			$orderCase = ' ORDER BY c.cat_title '.$order.', l.last_date DESC';
-		}else if( $orderby == 'title' ){
-			$orderCase = ' ORDER BY l.title '.$order.', l.last_date DESC';
-		}else if( $orderby == 'last_date' ){
-			$orderCase = ' ORDER BY l.last_date '.$order;
-		}
-		}
+			if( $orderby == 'cat_title' ){
+				$orderCase = ' ORDER BY c.cat_title '.$order.', l.last_date DESC';
+			}else if( $orderby == 'title' ){
+				$orderCase = ' ORDER BY l.title '.$order.', l.last_date DESC';
+			}else if( $orderby == 'last_date' ){
+				$orderCase = ' ORDER BY l.last_date '.$order;
+			}
+		} 
 		$all_pdfs = $wpdb->get_results($sql.$whereCase.$orderCase);
 		if (!$all_pdfs || count($all_pdfs) < 1){
 			return NULL;
